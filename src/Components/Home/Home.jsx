@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Task from '../Task/Task'
 
 
 
 const Home = () => {
-
-    const [tasks, setTasks] = useState([]);
+    const initArr=localStorage.getItem("tasks")?JSON.parse(localStorage.getItem("tasks")):[];
+    const [tasks, setTasks] = useState(initArr);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
@@ -16,12 +16,18 @@ const Home = () => {
         setTitle('')
         setDescription('')
     }
-    const deleteTask=(index)=>{
-    const newArr=tasks.filter((value,i)=>{
-        return i!=index;
-    });
-    setTasks(newArr);
+    const deleteTask = (index) => {
+        const newArr = tasks.filter((value, i) => {
+            return i != index;
+        });
+        setTasks(newArr);
     }
+
+    useEffect(() => {
+
+        localStorage.setItem("tasks",JSON.stringify(tasks));
+    }, [tasks])
+
     return (
         <div className='container'>
             <h2> ADD NEW GOAL</h2>
@@ -38,11 +44,11 @@ const Home = () => {
                 <button type='submit'>ADD TASK</button>
             </form>
 
-            {tasks.map(( item,index) => (
+            {tasks.map((item, index) => (
 
-                <Task key={index} 
+                <Task key={index}
                     title={item.title}
-                    description={item.description} 
+                    description={item.description}
                     deleteTask={deleteTask}
                     index={index}
                 />
